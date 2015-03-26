@@ -30,12 +30,30 @@
     <ClInclude Include="picond.h">
       <Filter>HeaderFiles</Filter>
     </ClInclude>
+    <ClInclude Include="popup.h">
+      <Filter>HeaderFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="tray.h">
+      <Filter>HeaderFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="listen.h">
+      <Filter>HeaderFiles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>SourceFiles</Filter>
     </ClCompile>
     <ClCompile Include="picond.cpp">
+      <Filter>SourceFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="popup.cpp">
+      <Filter>SourceFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="tray.cpp">
+      <Filter>SourceFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="listen.cpp">
       <Filter>SourceFiles</Filter>
     </ClCompile>
   </ItemGroup>

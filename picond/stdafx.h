@@ -4,12 +4,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <windows.h>
-
-// include c library
-#include <stdlib.h>
-#include <malloc.h>
-#include <memory.h>
+#include <Windows.h>
 #include <tchar.h>
 
 // link lib
