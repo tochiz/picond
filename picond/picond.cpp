@@ -29,8 +29,8 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	HANDLE hThr;
 
 	LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-	LoadString(hInstance, IDC_PICONDMAIN, szTrayWindowClass, MAX_LOADSTRING);
-	LoadString(hInstance, IDC_PICONDCHILD, szPopupWindowClass, MAX_LOADSTRING);
+	LoadString(hInstance, IDC_PICONDTRAY, szTrayWindowClass, MAX_LOADSTRING);
+	LoadString(hInstance, IDC_PICONDPOPUP, szPopupWindowClass, MAX_LOADSTRING);
 	
 	MyRegisterTrayClass(hInstance);
 	MyRegisterPopupClass(hInstance);
