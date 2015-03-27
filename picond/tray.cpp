@@ -128,9 +128,6 @@ LRESULT CALLBACK TrayWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
 		break;
-	case WM_CLOSE:
-		return DefWindowProc(hWnd, message, wParam, lParam);
-		break;
 	case WM_DESTROY:
 		Shell_NotifyIcon(NIM_DELETE, &nid);
 		PostQuitMessage(0);
