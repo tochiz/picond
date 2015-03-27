@@ -10,6 +10,7 @@ UINT iWMTASKCREATE;
 
 extern HINSTANCE hInst;
 extern HWND      hMainWnd;
+extern HMENU     hMenu;
 extern TCHAR szTitle[MAX_LOADSTRING];
 extern TCHAR szTrayWindowClass[MAX_LOADSTRING];
 
@@ -64,7 +65,7 @@ BOOL InitTrayInstance(HINSTANCE hInstance, int nCmdShow)
 	nid.cbSize = sizeof(NOTIFYICONDATA);
 	nid.uFlags = (NIF_ICON | NIF_MESSAGE | NIF_TIP);
 	nid.hWnd = hMainWnd;
-	nid.hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_SMALL));
+	nid.hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_PICOND));
 	nid.uID = 1;
 	nid.uCallbackMessage = WM_TASKTRAY;
 	lstrcpy(nid.szTip, szTitle);
@@ -90,13 +91,25 @@ LRESULT CALLBACK TrayWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		InitPopupInstance(cd->dwData, (wchar_t *)cd->lpData);
 	}
 	break;
+	case WM_DISPLAYCHANGE:
+		ReorderWnd();
+		break;
 	case WM_TASKTRAY:
 		switch (lParam)
 		{
 		case WM_RBUTTONDOWN:
-			// TODO: create popup menu...
+			POINT pt;
+			HMENU hPopupMenu = GetSubMenu(hMenu, 0);
+			if (hPopupMenu == NULL)
+			{
+				SendMessage(hWnd, WM_CLOSE, 0, 0);
+				break;
+			}
 
-			SendMessage(hWnd, WM_CLOSE, 0, 0);
+			GetCursorPos(&pt);
+			SetForegroundWindow(hWnd);
+			TrackPopupMenu(hPopupMenu, TPM_BOTTOMALIGN, pt.x, pt.y, 0, hWnd, NULL);
+
 			break;
 		}
 		break;
@@ -105,18 +118,21 @@ LRESULT CALLBACK TrayWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		wmEvent = HIWORD(wParam);
 		switch (wmId)
 		{
+		case IDM_ABOUT:
+			ShellExecute(NULL, _T("open"), _T("https://github.com/tochiz/picond"), NULL, NULL, SW_SHOWNORMAL);
+			break;
 		case IDM_EXIT:
-			DestroyWindow(hWnd);
+			SendMessage(hWnd, WM_CLOSE, 0, 0);
 			break;
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
 		break;
 	case WM_CLOSE:
-		Shell_NotifyIcon(NIM_DELETE, &nid);
 		return DefWindowProc(hWnd, message, wParam, lParam);
 		break;
 	case WM_DESTROY:
+		Shell_NotifyIcon(NIM_DELETE, &nid);
 		PostQuitMessage(0);
 		break;
 	default:

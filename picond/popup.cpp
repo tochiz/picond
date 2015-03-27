@@ -16,7 +16,6 @@ std::list<HWND> hWndList;
 extern HINSTANCE hInst;
 extern HWND      hMainWnd;
 extern TCHAR szPopupWindowClass[MAX_LOADSTRING];
-
 extern HFONT hFontBold;
 extern HFONT hFontNormal;
 
@@ -24,23 +23,23 @@ extern HFONT hFontNormal;
 LRESULT CALLBACK PopupWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 
-//
-// Util Functions
-//
 VOID ClearhWndList()
 {
 	hWndList.clear();
 }
+
 
 VOID AddhWndList(HWND hWnd)
 {
 	hWndList.push_back(hWnd);
 }
 
+
 VOID DeletehWndList(HWND hWnd)
 {
 	hWndList.remove_if([hWnd](const HWND& hWndFor){return (hWndFor == hWnd); });
 }
+
 
 VOID ReorderWnd()
 {
@@ -79,12 +78,6 @@ VOID ReorderWnd()
 	}
 }
 
-
-/*
-*
-* Popup Window
-*
-*/
 
 ATOM MyRegisterPopupClass(HINSTANCE hInstance)
 {
@@ -134,12 +127,16 @@ LRESULT CALLBACK PopupWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 	case WM_CREATE:
 		AddhWndList(hWnd);
 		return DefWindowProc(hWnd, message, wParam, lParam);
-	case WM_CLOSE:
+	case WM_DESTROY:
 		DeletehWndList(hWnd);
 		ReorderWnd();
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	case WM_PAINT:
 	{
+		//
+		// main draw
+		//
+
 		PAINTSTRUCT ps;
 		HDC hdc;
 		int len;
@@ -220,7 +217,6 @@ LRESULT CALLBACK PopupWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 			SetWindowPos(hWnd, NULL, 0, 0, width, height,
 				SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
 
-			// todo: reorder window...
 			ReorderWnd();
 		}
 

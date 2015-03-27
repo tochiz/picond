@@ -5,16 +5,14 @@
 #include "listen.h"
 
 
-
 HINSTANCE hInst;
 HWND      hMainWnd;
 TCHAR szTitle[MAX_LOADSTRING];
 TCHAR szTrayWindowClass[MAX_LOADSTRING];
 TCHAR szPopupWindowClass[MAX_LOADSTRING];
+HMENU hMenu;
 HFONT hFontBold;
 HFONT hFontNormal;
-
-
 
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
@@ -35,6 +33,19 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	MyRegisterTrayClass(hInstance);
 	MyRegisterPopupClass(hInstance);
 
+
+	// create some resources
+	hMenu = LoadMenu(hInstance, MAKEINTRESOURCE(IDC_PICOND));
+
+	hFontBold = CreateFont(12, 0, 0, 0, FW_BOLD, false, false, false,
+		DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+		DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, _T("MS Shell Dlg 2"));
+
+	hFontNormal = CreateFont(12, 0, 0, 0, FW_NORMAL, false, false, false,
+		DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+		DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, _T("MS Shell Dlg 2"));
+
+
 	// make list clean.
 	ClearhWndList();
 
@@ -45,18 +56,10 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		return FALSE;
 	}
 
-	// create some resources
-
-	hFontBold = CreateFont(12, 0, 0, 0, FW_BOLD, false, false, false,
-		DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
-		DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, _T("MS Shell Dlg 2"));
-
-	hFontNormal = CreateFont(12, 0, 0, 0, FW_NORMAL, false, false, false,
-		DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
-		DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, _T("MS Shell Dlg 2"));
 
 	// make "picond started." window
-	// todo: write some code...
+	InitPopupInstance(0, _T("picond(system)\npicond started."));
+
 
 	// network listen thread begin...
 	hThr = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)ThreadProc, 0, 0, NULL);
@@ -78,9 +81,9 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		}
 	}
 
+	DestroyMenu(hMenu);
 	DeleteObject(hFontBold);
 	DeleteObject(hFontNormal);
 
 	return (int)msg.wParam;
 }
-
