@@ -108,7 +108,7 @@ LRESULT CALLBACK TrayWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
 			GetCursorPos(&pt);
 			SetForegroundWindow(hWnd);
-			TrackPopupMenu(hPopupMenu, TPM_BOTTOMALIGN, pt.x, pt.y, 0, hWnd, NULL);
+			TrackPopupMenu(hPopupMenu, 0, pt.x, pt.y, 0, hWnd, NULL);
 
 			break;
 		}

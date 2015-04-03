@@ -26,7 +26,8 @@ TODO: take and paste some screen shot
 ## VS. Growl for windows
 
 Growl for windows is too heavy for my PC.
-Picond is made to be simple and light.
+Picond is made to be simple and light. 
+So that picond has many lack of feature.
 
 
 ## Requirement
