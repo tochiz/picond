@@ -32,11 +32,8 @@ So that picond has many lack of feature.
 
 ## Requirement
 
-- Windows Vista or later.
-    - Vista(not tested)
-    - 7
-    - 8
-    - 8.1
+- Windows Vista or later(Vista/7/8/8.1)
+	- ( x86 / amd64 )
 
 
 ## Usage

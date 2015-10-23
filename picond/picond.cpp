@@ -37,16 +37,18 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	// create some resources
 	hMenu = LoadMenu(hInstance, MAKEINTRESOURCE(IDC_PICOND));
 
+	// bold font
 	hFontBold = CreateFont(12, 0, 0, 0, FW_BOLD, false, false, false,
 		DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
 		DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, _T("MS Shell Dlg 2"));
 
+	// normal font
 	hFontNormal = CreateFont(12, 0, 0, 0, FW_NORMAL, false, false, false,
 		DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
 		DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, _T("MS Shell Dlg 2"));
 
 
-	// make list clean.
+	// make hWnd list clean.
 	ClearhWndList();
 
 
