@@ -95,6 +95,17 @@ LRESULT CALLBACK TrayWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 			InitPopupInstance(cd->dwData, (wchar_t *)cd->lpData);
 		}
 		break;
+	case WM_WTSSESSION_CHANGE:
+		switch (wParam)
+		{
+		case WTS_CONSOLE_CONNECT:
+		case WTS_REMOTE_CONNECT:
+		case WTS_SESSION_LOGON:
+		case WTS_SESSION_UNLOCK:
+			ReorderWnd();
+			break;
+		}
+		break;
 	case WM_DISPLAYCHANGE:
 		ReorderWnd();
 		break;
