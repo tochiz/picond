@@ -9,6 +9,7 @@
 
 // link lib
 #pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "Wtsapi32.lib")
 
 // newer controls
 #if defined _M_IX86

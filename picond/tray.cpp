@@ -2,6 +2,7 @@
 #include "picond.h"
 #include "popup.h"
 
+#include <Wtsapi32.h>
 #include <shellapi.h>
 
 
@@ -84,13 +85,16 @@ LRESULT CALLBACK TrayWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
 	switch (message)
 	{
+	case WM_CREATE:
+		WTSRegisterSessionNotification(hWnd, NOTIFY_FOR_THIS_SESSION);
+		break;
 	case WM_COPYDATA:
-	{
-		COPYDATASTRUCT* cd;
-		cd = (COPYDATASTRUCT *)lParam;
-		InitPopupInstance(cd->dwData, (wchar_t *)cd->lpData);
-	}
-	break;
+		{
+			COPYDATASTRUCT* cd;
+			cd = (COPYDATASTRUCT *)lParam;
+			InitPopupInstance(cd->dwData, (wchar_t *)cd->lpData);
+		}
+		break;
 	case WM_DISPLAYCHANGE:
 		ReorderWnd();
 		break;
@@ -130,6 +134,7 @@ LRESULT CALLBACK TrayWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		break;
 	case WM_DESTROY:
 		Shell_NotifyIcon(NIM_DELETE, &nid);
+		WTSUnRegisterSessionNotification(hWnd);
 		PostQuitMessage(0);
 		break;
 	default:
