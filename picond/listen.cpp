@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "listen.h"
+#include "task.h"
 
 #include <WinSock2.h>
 #include <string>
@@ -100,13 +101,7 @@ VOID	CALLBACK	ThreadProc(LPVOID)
 		std::wstring wbuffer(L"");
 		wbuffer.append(std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(buffer));
 
-
-		COPYDATASTRUCT cd;
-		cd.dwData = msg_type;
-		cd.cbData = (DWORD)((wbuffer.length() + 1) * sizeof(wbuffer.c_str()[0]));
-		cd.lpData = (PVOID)wbuffer.c_str();
-
-		SendMessage(hMainWnd, WM_COPYDATA, (WPARAM)NULL, (LPARAM)&cd);
+		AddTask(PICOND_TASK_ADD, NULL, msg_type, (LPWSTR)wbuffer.c_str());
 	}
 
 	closesocket(sock);

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "picond.h"
 #include "popup.h"
+#include "task.h"
 
 #include <list>
 #include <string>
@@ -11,34 +12,17 @@
 #define WIN_PADDING 10
 #define WIN_MARGIN  5
 
-std::list<HWND> hWndList;
 
 extern HINSTANCE hInst;
 extern HWND      hMainWnd;
 extern TCHAR szPopupWindowClass[MAX_LOADSTRING];
 extern HFONT hFontBold;
 extern HFONT hFontNormal;
+extern std::list<HWND> hWndList;
+extern CRITICAL_SECTION critWndSection;
 
 
 LRESULT CALLBACK PopupWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
-
-VOID ClearhWndList()
-{
-	hWndList.clear();
-}
-
-
-VOID AddhWndList(HWND hWnd)
-{
-	hWndList.push_back(hWnd);
-}
-
-
-VOID DeletehWndList(HWND hWnd)
-{
-	hWndList.remove_if([hWnd](const HWND& hWndFor){return (hWndFor == hWnd); });
-}
 
 
 VOID ReorderWnd()
@@ -101,7 +85,7 @@ ATOM MyRegisterPopupClass(HINSTANCE hInstance)
 }
 
 
-BOOL InitPopupInstance(int iType, LPTSTR lpText)
+HWND InitPopupInstance(int iType, LPTSTR lpText)
 {
 	HWND hWnd;
 	DWORD dwStyle = WS_POPUP;
@@ -112,10 +96,14 @@ BOOL InitPopupInstance(int iType, LPTSTR lpText)
 
 	if (!hWnd)
 	{
-		return FALSE;
+		return NULL;
 	}
 
-	return TRUE;
+	EnterCriticalSection(&critWndSection);
+	hWndList.push_back(hWnd);
+	LeaveCriticalSection(&critWndSection);
+
+	return hWnd;
 }
 
 
@@ -125,11 +113,8 @@ LRESULT CALLBACK PopupWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 	switch (message)
 	{
 	case WM_CREATE:
-		AddhWndList(hWnd);
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	case WM_DESTROY:
-		DeletehWndList(hWnd);
-		ReorderWnd();
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	case WM_PAINT:
 	{
@@ -141,7 +126,6 @@ LRESULT CALLBACK PopupWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 		HDC hdc;
 		int len;
 		TCHAR * str;
-		TCHAR * buf;
 		int width = 20;
 		int height = 20;
 		SIZE szTitle;
@@ -217,7 +201,7 @@ LRESULT CALLBACK PopupWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 			SetWindowPos(hWnd, NULL, 0, 0, width, height,
 				SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
 
-			ReorderWnd();
+			AddTask(PICOND_TASK_REORDER, NULL, 0, NULL);
 		}
 
 		// set and delete
@@ -225,7 +209,7 @@ LRESULT CALLBACK PopupWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 	}
 	break;
 	case WM_LBUTTONUP:
-		SendMessage(hWnd, WM_CLOSE, 0, 0);
+		AddTask(PICOND_TASK_DELETE, hWnd, 0, NULL);
 		break;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);

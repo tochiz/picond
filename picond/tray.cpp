@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "picond.h"
 #include "popup.h"
+#include "task.h"
 
 #include <Wtsapi32.h>
 #include <shellapi.h>
@@ -102,12 +103,12 @@ LRESULT CALLBACK TrayWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		case WTS_REMOTE_CONNECT:
 		case WTS_SESSION_LOGON:
 		case WTS_SESSION_UNLOCK:
-			ReorderWnd();
+			AddTask(PICOND_TASK_REORDER, NULL, 0, NULL);
 			break;
 		}
 		break;
 	case WM_DISPLAYCHANGE:
-		ReorderWnd();
+		AddTask(PICOND_TASK_REORDER, NULL, 0, NULL);
 		break;
 	case WM_TASKTRAY:
 		switch (lParam)
@@ -133,6 +134,9 @@ LRESULT CALLBACK TrayWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		wmEvent = HIWORD(wParam);
 		switch (wmId)
 		{
+		case IDM_ALLCLEAR:
+			AddTask(PICOND_TASK_CLEAR, NULL, 0, NULL);
+			break;
 		case IDM_ABOUT:
 			ShellExecute(NULL, _T("open"), _T("https://github.com/tochiz/picond"), NULL, NULL, SW_SHOWNORMAL);
 			break;
@@ -142,6 +146,10 @@ LRESULT CALLBACK TrayWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
+		break;
+	case WM_CLOSE:
+		AddTask(PICOND_TASK_CLEAR, NULL, 0, NULL);
+		return DefWindowProc(hWnd, message, wParam, lParam);
 		break;
 	case WM_DESTROY:
 		Shell_NotifyIcon(NIM_DELETE, &nid);

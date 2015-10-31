@@ -36,6 +36,9 @@
     <ClInclude Include="listen.h">
       <Filter>HeaderFiles</Filter>
     </ClInclude>
+    <ClInclude Include="task.h">
+      <Filter>HeaderFiles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -51,6 +54,9 @@
       <Filter>SourceFiles</Filter>
     </ClCompile>
     <ClCompile Include="listen.cpp">
+      <Filter>SourceFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="task.cpp">
       <Filter>SourceFiles</Filter>
     </ClCompile>
   </ItemGroup>
